@@ -18,8 +18,7 @@ OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 CC = gcc
 OBJ_SUB =
 
-MLX=libmlx
-INC=-I./include -I../libft_val -I./libmlx -I./libmatrix -I ./libocl -I$(HOME)/.brew/include/
+INC=-I./include -I../libft_val -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
 ARG=-L../libft_val -L./libmatrix -L$(HOME)/.brew/lib/ \
 		-lft -lmatrix -lglfw -lglew\
 		-framework OpenCL -framework OpenGL
