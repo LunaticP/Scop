@@ -5,7 +5,9 @@ SRC_NAME =	main.c\
 			init_vertex_shader.c\
 			init_fragment_shader.c\
 			init_shader.c\
-			read_glsl.c
+			read_glsl.c\
+			parser.c\
+			perlin.c
 
 INC_FILE = include/scop.h\
 
@@ -15,7 +17,7 @@ OBJ_PATH = ./obj/
 SRC=$(addprefix $(SRC_PATH),$(SRC_NAME))
 OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 
-CC = gcc
+CC = gcc -g
 OBJ_SUB =
 
 INC=-I./include -I../libft_val -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW

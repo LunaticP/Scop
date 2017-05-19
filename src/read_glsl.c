@@ -2,8 +2,7 @@
 #include <unistd.h>
 #include "scop.h"
 
-GLchar  *read_shad(char *file)
-{
+GLchar *read_shad(char *file) {
 	char	*shader;
 	char	buf[8];
 	int	 size;
