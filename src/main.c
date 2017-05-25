@@ -20,16 +20,16 @@ int	 main(int ac, char **av)
 	int width, height;
 	(void)ac;
 
-	obj = parse_obj(av[1]);
-	print_info(obj.name);
-	print_info(obj.group);
-	print_info(ft_itoa(obj.v_len));
-	print_info(ft_itoa(obj.i_len));
 	window = init(1280, 720, "scop");
 	glfwSetKeyCallback(window, key_callback);
 	vShad = init_v_shad("./vert");
 	fShad = init_f_shad("./frag");
 	shadProg = init_shad(vShad, fShad);
+	obj = parse_obj(av[1]);
+	print_info(obj.name);
+	print_info(obj.group);
+	print_info(ft_itoa(obj.v_len));
+	print_info(ft_itoa(obj.i_len));
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -41,7 +41,7 @@ int	 main(int ac, char **av)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	glEnable(GL_DEPTH_TEST);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();

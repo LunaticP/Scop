@@ -1,13 +1,12 @@
 #include "scop.h"
-#include <stdio.h>
 
 void		add_vertices(char *line, GLfloat *v, GLuint *size)
 {
-	v[*size] = (GLfloat)ft_atof(line) / 5.0f;
+	v[*size] = (GLfloat)ft_atof(line);
 	line = ft_strchr(line, ' ') + 1;
-	v[*size + 1] = (GLfloat)ft_atof(line) / 5.0f;
+	v[*size + 1] = (GLfloat)ft_atof(line);
 	line = ft_strchr(line, ' ');
-	v[*size + 2] = (GLfloat)ft_atof(line) / 5.0f;
+	v[*size + 2] = (GLfloat)ft_atof(line);
 	*size += 3;
 }
 
@@ -64,9 +63,9 @@ t_obj_file	parse_obj(char *file)
 
 	init_obj(&obj, file);
 	obj.vertices = (GLfloat *)ft_memalloc(sizeof(GLfloat) * obj.v_len);
-	print_log("before");
 	obj.indices = (GLuint *)ft_memalloc(sizeof(GLuint) * obj.i_len);
-	print_log("after");
+	obj.name = "test";
+	obj.group = "test";
 	obj.v_len = 0;
 	obj.i_len = 0;
 	fd = open(file, O_RDONLY);
