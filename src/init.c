@@ -1,7 +1,6 @@
 #include "scop.h"
 
-GLFWwindow	*init(int x, int y, char *name)
-{
+GLFWwindow	*init(int x, int y, char *name) {
 	GLFWwindow* window;
 	int		 width;
 	int		 height;
@@ -12,17 +11,16 @@ GLFWwindow	*init(int x, int y, char *name)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	window = glfwCreateWindow(x, y, name, NULL, NULL);
-	if (window == NULL)
-	{
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	window = glfwCreateWindow(2560, 1440, name, glfwGetPrimaryMonitor(), NULL);
+	if (window == NULL) {
 		ft_putendl("Failed to create GLFW window");
 		glfwTerminate();
 		exit(-1);
 	}
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
-	{
+	if (glewInit() != GLEW_OK) {
 		ft_putendl("Failed to create GLEW window");
 		exit(-1);
 	}
