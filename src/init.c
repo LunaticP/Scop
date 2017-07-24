@@ -1,9 +1,9 @@
 #include "scop.h"
 
 GLFWwindow	*init(int x, int y, char *name) {
-	GLFWwindow* window;
-	int		 width;
-	int		 height;
+	GLFWwindow*	window;
+	int			width;
+	int			height;
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -12,7 +12,8 @@ GLFWwindow	*init(int x, int y, char *name) {
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	window = glfwCreateWindow(2560, 1440, name, glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(2560, 1440, name, glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(x, y, name, NULL, NULL);
 	if (window == NULL) {
 		ft_putendl("Failed to create GLFW window");
 		glfwTerminate();

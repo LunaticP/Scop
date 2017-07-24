@@ -99,5 +99,6 @@ int				*perlin(void)
 		while (++x < 2048)
 			tex[y * 2048 + x + 3] = merge((unsigned char **)img, x, y);
 	}
+	ft_putendl("perling done");
 	return (tex);
 }

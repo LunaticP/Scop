@@ -1,8 +1,33 @@
 #include "scop.h"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-	if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+double		timer(short mod) {
+	static double	time = 0.0;
+	static short	status = 1;
+
+	if (mod == 0) {
+		if (status == 0) {
+			glfwSetTime(time);
+			status = 1;
+		}
+		else {
+			time = glfwGetTime();
+			status = 0;
+		}
+	}
+	else {
+		if (status == 0)
+			return (time);
+		else
+			return (glfwGetTime());
+	}
+	return (0.0);
+}
+
+void	key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		timer(0);
 }
 
 int	 main(int ac, char **av) {
@@ -38,7 +63,7 @@ int	 main(int ac, char **av) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	glEnable(GL_DEPTH_TEST);
-//	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_MULTISAMPLE);
 	while(!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -46,7 +71,7 @@ int	 main(int ac, char **av) {
 		glUseProgram(shadProg);
 		glfwGetWindowSize(window, &width, &height);
 		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_TRUE);
-		glUniform1f(glGetUniformLocation(shadProg, "time"), (GLfloat)glfwGetTime());
+		glUniform1f(glGetUniformLocation(shadProg, "time"), timer(1));
 		glUniform1f(glGetUniformLocation(shadProg, "ratiox"), (float)width / (float)height);
 		glUniform1f(glGetUniformLocation(shadProg, "ratioy"), (float)height / (float)width);
 		glBindVertexArray(VAO);

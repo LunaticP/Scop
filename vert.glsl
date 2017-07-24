@@ -46,12 +46,19 @@ void main()
 	pos.y * sin(0.0) + pos.z * cos(0.0),
 	1.0);
 
-	value = (sin(time / 4.0 - M_PI / 1.75) + 1.0) * 500;
-	gl_Position = vec4 (
-	round(pos.x * value) / value / ((ratiox > 1.0) ? ratiox : 1.0),
-	round(pos.y * value) / value / ((ratioy > 1.0) ? ratioy : 1.0),
-	round(pos.z * value) / value, 1.0);
-
+	if (time < 10) {
+		value = (sin(time / 4.0 - M_PI / 1.75) + 1.0) * 500;
+		gl_Position = vec4 (
+		round(pos.x * value) / value / ((ratiox > 1.0) ? ratiox : 1.0),
+		round(pos.y * value) / value / ((ratioy > 1.0) ? ratioy : 1.0),
+		round(pos.z * value) / value, 1.0);
+	}
+	else {
+		gl_Position = vec4 (
+		pos.x / ((ratiox > 1.0) ? ratiox : 1.0),
+		pos.y / ((ratioy > 1.0) ? ratioy : 1.0),
+		pos.z, 1.0);
+	}
 	vertexPos = vec4 (
 		abs(gl_Position.x),
 		abs(gl_Position.y),
