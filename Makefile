@@ -20,8 +20,8 @@ OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 CC = gcc -g
 OBJ_SUB =
 
-INC=-I./include -I./libft -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
-ARG=-L./libft -L./libmatrix -L$(HOME)/.brew/lib/ \
+INC=-I./include -I./libft_scop -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
+ARG=-L./libft_scop -L./libmatrix -L$(HOME)/.brew/lib/ \
 		-lft -lmatrix -lglfw -lglew\
 		-framework OpenCL -framework OpenGL
 CFLAGS =	-Wall -Werror
@@ -39,7 +39,7 @@ $(DEPDIR)/%.d: $(SRC_PATH)%.c $(DEPDIR)%.d
 $(NAME): lib print_rt $(OBJ)
 	@$(CC) -g -O0 $(CFLAGS) $(ARG) $(INC) $(OBJ) -o $@
 lib:
-	@make -C ../libft_val
+	@make -C ../libft_scop
 	@make -C ./libmatrix
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FILE)
@@ -48,13 +48,13 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FILE)
 
 clean:
 	-@rm -rf $(OBJ_PATH) $(DEPDIR)
-	@make -C ../libft_val $@
+	@make -C ../libft_scop $@
 	@make -C ./libmatrix $@
 	@printf "\e[33mobjects\t\t\e[31m[CLEAN]\e[0m\n"
 
 fclean: clean
 	-@rm $(NAME)
-	@make -C ../libft_val $@
+	@make -C ../libft_scop $@
 	@make -C ./libmatrix $@
 	@printf "\e[33mrtvocl\t\t\e[31m[CLEAN]\e[0m\n"
 
