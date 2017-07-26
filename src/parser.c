@@ -13,11 +13,25 @@ void		add_vertices(char *line, GLfloat *v, GLuint *size)
 void 		add_indices(char *line, GLuint *i, GLuint *size)
 {
 	i[*size] = (GLuint)ft_atoi(line) - 1;
+//	line = ft_strchr(line, '/') + 1;
+//	i[*size + 3] = (GLuint)ft_atoi(line) - 1;
 	line = ft_strchr(line, ' ') + 1;
 	i[*size + 1] = (GLuint)ft_atoi(line) - 1;
-	line = ft_strchr(line, ' ');
+//	line = ft_strchr(line, '/') + 1;
+//	i[*size + 4] = (GLuint)ft_atoi(line) - 1;
+	line = ft_strchr(line, ' ') + 1;
 	i[*size + 2] = (GLuint)ft_atoi(line) - 1;
+//	line = ft_strchr(line, '/') + 1;
+//	i[*size + 5] = (GLuint)ft_atoi(line) - 1;
 	*size += 3;
+}
+
+void 		add_textures(char *line, GLfloat *t, GLuint *size)
+{
+	t[*size + 3] = (GLfloat)ft_atof(line);
+	line = ft_strchr(line, ' ') + 1;
+	t[*size + 4] = (GLfloat)ft_atof(line);
+	*size += 5;
 }
 
 void		parse_line(char *line, t_obj_file *obj)
@@ -30,6 +44,8 @@ void		parse_line(char *line, t_obj_file *obj)
 		add_vertices(&line[2], obj->vertices, &(obj->v_len));
 	if (!ft_strncmp("f ", line, 2))
 		add_indices(&line[2], obj->indices, &(obj->i_len));
+//	if (!ft_strncmp("vt ", line, 3))
+//		add_textures(&line[3], obj->vertices, &(obj->t_len));
 }
 
 void		init_obj(t_obj_file *obj, char *file)
@@ -48,7 +64,9 @@ void		init_obj(t_obj_file *obj, char *file)
 		if (!ft_strncmp("v ", line, 2))
 			obj->v_len += 3;
 		if (!ft_strncmp("f ", line, 2))
-			obj->i_len += 3;
+			obj->i_len += 6;
+		if (!ft_strncmp("vt ", line, 3))
+			obj->t_len += 2;
 		ft_memdel((void**)&line);
 	}
 	ft_memdel((void**)&line);
@@ -64,6 +82,7 @@ t_obj_file	parse_obj(char *file)
 	init_obj(&obj, file);
 	obj.vertices = (GLfloat *)ft_memalloc(sizeof(GLfloat) * obj.v_len);
 	obj.indices = (GLuint *)ft_memalloc(sizeof(GLuint) * obj.i_len);
+	obj.t_ind = (GLuint *)ft_memalloc(sizeof(GLuint) * obj.i_len);
 	obj.name = "test";
 	obj.group = "test";
 	obj.v_len = 0;

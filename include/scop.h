@@ -25,7 +25,6 @@ typedef struct	s_obj_file
 	char 		*name;
 	char 		*group;
 	GLfloat		*vertices;
-	GLfloat		*vtextures;
 	GLuint		*indices;
 	GLuint		*t_ind;
 	GLuint 		v_len;

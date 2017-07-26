@@ -34,4 +34,6 @@ void main()
 //		color = vec4(vec3(n / 2.0 + 0.3), 1.0);
 		color = col(vec4(1.0 - color.x, 1.0 - color.y, 1.0 - color.z, 1.0));
 	}
+	else
+		color = col(vertexColor);
 }
