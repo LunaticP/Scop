@@ -20,8 +20,8 @@ OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 CC = gcc -g
 OBJ_SUB =
 
-INC=-I./include -I../libft_val -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
-ARG=-L../libft_val -L./libmatrix -L$(HOME)/.brew/lib/ \
+INC=-I./include -I./libft_val -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
+ARG=-L./libft_val -L./libmatrix -L$(HOME)/.brew/lib/ \
 		-lft -lmatrix -lglfw -lglew\
 		-framework OpenCL -framework OpenGL
 CFLAGS =	-Wall -Werror
