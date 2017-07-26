@@ -39,7 +39,7 @@ $(DEPDIR)/%.d: $(SRC_PATH)%.c $(DEPDIR)%.d
 $(NAME): lib print_rt $(OBJ)
 	@$(CC) -g -O0 $(CFLAGS) $(ARG) $(INC) $(OBJ) -o $@
 lib:
-	@make -C ../libft_scop
+	@make -C ./libft_scop
 	@make -C ./libmatrix
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FILE)
@@ -48,13 +48,13 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INC_FILE)
 
 clean:
 	-@rm -rf $(OBJ_PATH) $(DEPDIR)
-	@make -C ../libft_scop $@
+	@make -C ./libft_scop $@
 	@make -C ./libmatrix $@
 	@printf "\e[33mobjects\t\t\e[31m[CLEAN]\e[0m\n"
 
 fclean: clean
 	-@rm $(NAME)
-	@make -C ../libft_scop $@
+	@make -C ./libft_scop $@
 	@make -C ./libmatrix $@
 	@printf "\e[33mrtvocl\t\t\e[31m[CLEAN]\e[0m\n"
 
