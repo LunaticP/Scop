@@ -12,6 +12,7 @@
 # include <fcntl.h>
 # include <unistd.h>
 # include "libft.h"
+# include <stdio.h>
 
 typedef	struct		s_texture
 {

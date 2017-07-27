@@ -80,6 +80,7 @@ int	 main(int ac, char **av) {
 	print_info(obj.group);
 	print_info(ft_itoa(obj.v_len));
 	print_info(ft_itoa(obj.i_len));
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -92,14 +93,16 @@ int	 main(int ac, char **av) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * obj.i_len, obj.indices, GL_STATIC_DRAW);
 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-//	glEnableVertexAttribArray(1);
-//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(sizeof(GLfloat) * 3));
-	glBindVertexArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(sizeof(GLfloat) * 3));
+	glEnableVertexAttribArray(1);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_MULTISAMPLE);
+
 	while(!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -109,13 +112,12 @@ int	 main(int ac, char **av) {
 		glUniform1f(glGetUniformLocation(shadProg, "time"), (GLfloat)timer(1));
 		glUniform1f(glGetUniformLocation(shadProg, "ratiox"), (float)width / (float)height);
 		glUniform1f(glGetUniformLocation(shadProg, "ratioy"), (float)height / (float)width);
-	//	glUniformMatrix4fv(glGetUniformLocation(shadProg, "proj"), 1, GL_FALSE, mtrx);
 		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, obj.i_len, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, obj.v_len - 1, GL_UNSIGNED_INT, 0);
 		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_FALSE);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, obj.i_len, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, obj.v_len - 1, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();
