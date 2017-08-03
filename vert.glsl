@@ -3,7 +3,7 @@
 #define M_PI 3.1415926535897932384626433832795
 
 layout (location = 0) in vec3 position;
-layout (location = 1) in vec2 tex;
+//layout (location = 1) in vec2 tex;
 
 out		vec4	vertexColor;
 out		vec4	vertexPos;
@@ -32,7 +32,7 @@ void main()
 	pos = vec4(position, 1.0); //divide here !!
 	pos.y -= 0.0;
 	if (mod)
-		vertexColor = vec4(tex.x, 0.0, tex.y, 1.0);
+		vertexColor = vec4(1.0);//vertexColor = vec4(tex.x, 0.0, tex.y, 1.0);
 	else
 		vertexColor = vec4(0.0);
 

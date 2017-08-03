@@ -1,8 +1,8 @@
 #include "scop.h"
 
 double		timer(short mod) {
-	static double	time = 0.0;
-	static short	status = 1;
+	static double	time = 12.0;
+	static short	status = 0;
 
 	if (mod == 0) {
 		if (status == 0) {
@@ -78,8 +78,8 @@ int	 main(int ac, char **av) {
 	obj = parse_obj(av[1]);
 	print_info(obj.name);
 	print_info(obj.group);
-	print_info(ft_itoa(obj.v_len));
-	print_info(ft_itoa(obj.i_len));
+	print_info(ft_itoa(obj.v_len / 5));
+	print_info(ft_itoa(obj.i_len / 6));
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -88,15 +88,15 @@ int	 main(int ac, char **av) {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * obj.v_len, obj.vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj.v_len, obj.vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * obj.i_len, obj.indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * obj.i_len, obj.indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(sizeof(GLfloat) * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glEnable(GL_DEPTH_TEST);

@@ -103,7 +103,7 @@ t_obj_file	parse_obj(char *file) {
 		fflush(0);
 	}
 	for (int i = 0; i < obj.i_len; i++) {
-		printf("%d\t", obj.indices[i]);
+		printf("%d\t", obj.indices[i] + 1);
 		if (i % 6 == 0)
 			ft_putendl("");
 		fflush(0);

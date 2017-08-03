@@ -17,8 +17,8 @@
 typedef	struct		s_texture
 {
 	unsigned char	*image;
-	int 			w;
-	int 			h;
+	int				w;
+	int				h;
 }					t_texture;
 
 typedef struct	s_obj_file
@@ -28,9 +28,9 @@ typedef struct	s_obj_file
 	GLfloat		*vertices;
 	GLuint		*indices;
 	GLuint		*t_ind;
-	GLuint 		v_len;
-	GLuint 		t_len;
-	GLuint 		i_len;
+	GLuint		v_len;
+	GLuint		t_len;
+	GLuint		i_len;
 }				t_obj_file;
 
 GLFWwindow	*init(int x, int y, char *name);
