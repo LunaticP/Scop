@@ -33,7 +33,6 @@ SRC_NAME =	get_next_line.c\
 			mem/ft_memmove.c\
 			mem/ft_memset.c\
 			mem/ft_memswitch.c\
-			mem/ft_memjoin.c\
 			print/ft_print_mem.c\
 			print/ft_putchar.c\
 			print/ft_putchar_fd.c\

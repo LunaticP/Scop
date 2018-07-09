@@ -1,4 +1,3 @@
-OS = APPLE
 NAME = scop
 SRC_NAME =	main.c\
 			init.c\
@@ -10,6 +9,7 @@ SRC_NAME =	main.c\
 			perlin.c
 
 INC_FILE = include/scop.h\
+	   libft_scop
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 SRC_PATH = ./src/
@@ -20,11 +20,10 @@ OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 CC = gcc -g
 OBJ_SUB =
 
-INC=-I./include -I./libft_scop -I./libmatrix -I$(HOME)/.brew/include/GL -I$(HOME)/.brew/include/GLFW
-ARG=-L./libft_scop -L./libmatrix -L$(HOME)/.brew/lib/ \
-		-lft -lmatrix -lglfw -lglew\
-		-framework OpenCL -framework OpenGL
-CFLAGS =	-Wall -Werror
+INC=-I./include -I./libft_scop -I./libmatrix -I$(HOME)/CODE/external/glew/include/GL -I/usr/local/include/GLFW
+ARG= -L./libft_scop/ -L/usr/lib64/ -L/usr/local/lib/
+LIBS= -lft -ldl -lGLEW -lX11 -lGL -lGLU -lglfw3 -lXxf86vm -lXrandr -lpthread -lXi -lm
+CFLAGS = -Wall -Werror
 DEPDIR = .deps/
 DEPFILES = $(patsubst %.c,$(DEPDIR)%.d,$(SRC_NAME))
 
@@ -37,7 +36,7 @@ $(DEPDIR)/%.d: $(SRC_PATH)%.c $(DEPDIR)%.d
 -include $(DEPFILES)
 
 $(NAME): lib print_rt $(OBJ)
-	@$(CC) -g -O0 $(CFLAGS) $(ARG) $(INC) $(OBJ) -o $@
+	@$(CC) -g -O0 $(CFLAGS) $(ARG) $(INC) $(OBJ) $(LIBS) -o $@
 lib:
 	@make -C ./libft_scop
 	@make -C ./libmatrix
