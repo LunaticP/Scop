@@ -22,7 +22,7 @@ OBJ_SUB =
 
 INC=-I./include -I./libft_scop -I./libmatrix -I$(HOME)/CODE/external/glew/include/GL -I/usr/local/include/GLFW
 ARG= -L./libft_scop/ -L/usr/lib64/ -L/usr/local/lib/
-LIBS= -lft -ldl -lGLEW -lX11 -lGL -lGLU -lglfw3 -lXxf86vm -lXrandr -lpthread -lXi -lm
+LIBS= -lft -ldl -lGLEW -lX11 -lGL -lGLU -lglfw -lXxf86vm -lXrandr -lpthread -lm
 CFLAGS = -Wall -Werror
 DEPDIR = .deps/
 DEPFILES = $(patsubst %.c,$(DEPDIR)%.d,$(SRC_NAME))
