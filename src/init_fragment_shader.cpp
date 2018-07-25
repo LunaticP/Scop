@@ -1,6 +1,6 @@
 #include "scop.h"
 
-GLuint  init_f_shad(char *file)
+GLuint  init_f_shad(const char *file)
 {
 	const GLchar	*fShadSrc = read_shad(file);
 	GLuint		  fShad;
@@ -12,7 +12,7 @@ GLuint  init_f_shad(char *file)
 	glGetShaderiv(fShad, GL_COMPILE_STATUS, &success);
 	if(!success)
 	{
-		ft_putendl("fragment shader : COMPILATION_FAILED");
+		std::cout << "fragment shader : COMPILATION_FAILED" << std::endl;
 		exit(-1);
 	}
 	return (fShad);

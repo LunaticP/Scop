@@ -23,7 +23,7 @@ unsigned char	*gen_image(int xx, int yy)
 
 	gettimeofday(&time, NULL);
 	srandom((time.tv_sec + time.tv_usec) / 2);
-	image = (unsigned char *)ft_memalloc(xx * yy);
+	image = (unsigned char *)malloc(xx * yy);
 	y = -1;
 	while (++y < yy && (x = -1))
 		while (++x < xx)
@@ -80,7 +80,7 @@ int				*perlin(void)
 	int				x;
 	int				y;
 
-	tex = (int *)ft_memalloc(sizeof(int) * 2048 * 2048 + 3);
+	tex = (int *)malloc(sizeof(int) * 2048 * 2048 + 3);
 	tex[0] = 2048 * 2048 + 3;
 	tex[1] = 2048;
 	tex[2] = 2048;
@@ -99,6 +99,5 @@ int				*perlin(void)
 		while (++x < 2048)
 			tex[y * 2048 + x + 3] = merge((unsigned char **)img, x, y);
 	}
-	ft_putendl("perling done");
 	return (tex);
 }

@@ -66,7 +66,6 @@ int	 main(int ac, char **av) {
 	GLuint		fShad;
 	GLuint		shadProg;
 	//GLfloat		*mtrx = create_mtrx();
-	t_obj_file	obj;
 	int width, height;
 	(void)ac;
 
@@ -75,11 +74,17 @@ int	 main(int ac, char **av) {
 	vShad = init_v_shad("./vert.glsl");
 	fShad = init_f_shad("./frag.glsl");
 	shadProg = init_shad(vShad, fShad);
-	obj = parse_obj(av[1]);
-	print_info(obj.name);
-	print_info(obj.group);
-	print_info(ft_itoa(obj.v_len / 5));
-	print_info(ft_itoa(obj.i_len / 6));
+	GLfloat vertices[] = {
+			// positions          // colors           // texture coords
+			0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+			0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+	};
+	GLuint indices[] = {
+			0, 1, 3, // first triangle
+			1, 2, 3  // second triangle
+	};
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -88,10 +93,10 @@ int	 main(int ac, char **av) {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * obj.v_len, obj.vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 32, vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * obj.i_len, obj.indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * 6, indices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -114,10 +119,10 @@ int	 main(int ac, char **av) {
 		glUniform1f(glGetUniformLocation(shadProg, "ratioy"), (float)height / (float)width);
 		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, obj.v_len - 1, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 31, GL_UNSIGNED_INT, 0);
 		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_FALSE);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDrawElements(GL_TRIANGLES, obj.v_len - 1, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 5, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

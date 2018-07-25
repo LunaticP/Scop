@@ -12,7 +12,7 @@ GLuint  init_shad(GLuint v, GLuint f)
 	glGetProgramiv(shadProg, GL_LINK_STATUS, &success);
 	if(!success)
 	{
-		ft_putendl("program shader : LINKING_FAILED");
+		std::cout << "program shader : LINKING_FAILED" << std::endl;
 		exit(-1);
 	}
 	glDeleteShader(v);
