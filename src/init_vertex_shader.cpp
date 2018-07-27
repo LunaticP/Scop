@@ -6,8 +6,6 @@ GLuint  init_v_shad(const char *file)
 	GLuint		  vShad;
 	GLint		   success;
 
-	std::cout << vShadSrc << std::endl;
-	std::cout << "SHIIIIIIIIIIIIIIIIIT" << std::endl;
 	vShad = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vShad, 1, &vShadSrc, NULL);
 	glCompileShader(vShad);

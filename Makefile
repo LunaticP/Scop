@@ -8,6 +8,8 @@ SRC_NAME =	main.cpp\
 		perlin.cpp
 
 INC_FILE = include/scop.h\
+	   include/Object.hpp\
+	   glm/glm/glm.hpp\
 	   libft_scop
 
 OBJ_NAME = $(SRC_NAME:.cpp=.o)
@@ -19,9 +21,9 @@ OBJ=$(addprefix $(OBJ_PATH),$(OBJ_NAME))
 CC = g++ -g
 OBJ_SUB =
 
-INC=-I./include -I./libft_scop -I./libmatrix -I$(HOME)/CODE/external/glew/include/GL -I/usr/local/include/GLFW
-ARG= -L./libft_scop/ -L/usr/lib64/ -L/usr/local/lib/
-LIBS= -lft -ldl -lGLEW -lX11 -lGL -lGLU -lglfw -lXxf86vm -lXrandr -lpthread -lm
+INC=-I./include -I./libft_scop -I./libmatrix -I./glm -I/usr/include -I/usr/local/include/GLFW -I/usr/local/include/assimp
+ARG= -L./libft_scop -L/usr/lib64 -L/usr/local/lib
+LIBS= -lft -ldl -lX11 -lXxf86vm -lXrandr -lpthread -lm -lGL -lGLU -lGLEW -lglfw -lIrrXML -lz -lassimp
 CFLAGS = -Wall -Werror
 DEPDIR = .deps/
 DEPFILES = $(patsubst %.cpp,$(DEPDIR)%.d,$(SRC_NAME))

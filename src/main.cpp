@@ -65,15 +65,15 @@ int	 main(int ac, char **av) {
 	GLuint		vShad;
 	GLuint		fShad;
 	GLuint		shadProg;
-	//GLfloat		*mtrx = create_mtrx();
 	int width, height;
 	(void)ac;
 
 	window = init(1920, 1080, "scop");
 	glfwSetKeyCallback(window, key_callback);
-	vShad = init_v_shad("./vert.glsl");
-	fShad = init_f_shad("./frag.glsl");
+	vShad = init_v_shad("/home/lunatic/CODE/Scop/vert.glsl");
+	fShad = init_f_shad("/home/lunatic/CODE/Scop/frag.glsl");
 	shadProg = init_shad(vShad, fShad);
+	Model model("/home/lunatic/CODE/Scop/nanosuit/nanosuit.obj");
 	GLfloat vertices[] = {
 			// positions          // colors           // texture coords
 			0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
@@ -104,6 +104,7 @@ int	 main(int ac, char **av) {
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+//	glLineWidth(0.3f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_MULTISAMPLE);
@@ -113,10 +114,23 @@ int	 main(int ac, char **av) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(shadProg);
 		glfwGetWindowSize(window, &width, &height);
-		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_TRUE);
 		glUniform1f(glGetUniformLocation(shadProg, "time"), (GLfloat)timer(1));
 		glUniform1f(glGetUniformLocation(shadProg, "ratiox"), (float)width / (float)height);
 		glUniform1f(glGetUniformLocation(shadProg, "ratioy"), (float)height / (float)width);
+//		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
+//		glUniformMatrix4fv(glGetUniformLocation(shadProg, "proj"), 1, GL_FALSE, glm::value_ptr(projection));
+		glm::mat4 scale(1.0f);
+		scale = glm::translate(scale, glm::vec3(0.0f, -2.2f, 0.0f)); // translate it down so it's at the center of the scene
+		scale = glm::scale(scale, glm::vec3(0.20f, 0.20f, 0.20f));	// it's a bit too big for our scene, so scale it down
+		glUniformMatrix4fv(glGetUniformLocation(shadProg, "model"), 1, GL_FALSE, glm::value_ptr(scale));
+		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_TRUE);
+		glBindVertexArray(VAO);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		model.Draw(shadProg);
+		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_FALSE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		model.Draw(shadProg);
+		glUniform1i(glGetUniformLocation(shadProg, "mod"), GL_TRUE);
 		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, 31, GL_UNSIGNED_INT, 0);
