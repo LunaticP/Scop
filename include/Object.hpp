@@ -30,6 +30,7 @@ public:
         setupMesh();
     }
     void Draw(GLuint shader){
+        glUseProgram(shader);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -70,6 +71,8 @@ private:
 class Model
 {
 public:
+    vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+    vector<Mesh> meshes;
     /*  Functions   */
     Model(string path)
     {
@@ -81,7 +84,6 @@ public:
     }
 private:
     /*  Model Data  */
-    vector<Mesh> meshes;
     string directory;
     /*  Functions   */
     void loadModel(string path)
@@ -112,6 +114,7 @@ private:
             processNode(node->mChildren[i], scene);
         }
     }
+
     Mesh processMesh(aiMesh *mesh, const aiScene *scene)
     {
         vector<Vertex> vertices;
@@ -121,7 +124,6 @@ private:
         for(unsigned int i = 0; i < mesh->mNumVertices; i++)
         {
             Vertex vertex;
-            // process vertex positions, normals and texture coordinates
             glm::vec3 vector;
             vector.x = mesh->mVertices[i].x;
             vector.y = mesh->mVertices[i].y;
@@ -131,6 +133,15 @@ private:
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
             vertex.Normal = vector;
+            if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+            {
+                glm::vec2 vec;
+                vec.x = mesh->mTextureCoords[0][i].x;
+                vec.y = mesh->mTextureCoords[0][i].y;
+                vertex.TexCoords = vec;
+            }
+            else
+                vertex.TexCoords = glm::vec2(0.0f, 0.0f);
             vertices.push_back(vertex);
         }
         // process indices
@@ -140,11 +151,6 @@ private:
             for(unsigned int j = 0; j < face.mNumIndices; j++)
                 indices.push_back(face.mIndices[j]);
         }
-        // process material
-        if(mesh->mMaterialIndex >= 0)
-        {
-        }
-
         return Mesh(vertices, indices, textures);
     }
 //    vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
