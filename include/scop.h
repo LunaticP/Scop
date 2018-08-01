@@ -25,12 +25,9 @@
 #include <unistd.h>
 #include "libft.h"
 #include <stdio.h>
-#include <Object.hpp>
 
 GLFWwindow	*init(int x, int y, const char *name);
-GLuint		init_v_shad(const char *file);
-GLuint		init_f_shad(const char *file);
-GLuint		init_shad(GLuint v, GLuint f);
+GLuint		init_shad(std::string vertexShaderPath, std::string fragementShaderPath);
 GLchar		*read_shad(const char *file);
 int			*perlin(void);
 
