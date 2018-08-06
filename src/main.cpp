@@ -1,6 +1,10 @@
 #include "scop.h"
 #include "Object.hpp"
 #include "Lights.hpp"
+#include <stdio.h>
+#include <irrKlang.h>
+#include <conio.h>
+using namespace irrklang;
 
 double		timer(short mod) {
 	static double	time = 12.0;
@@ -38,6 +42,18 @@ int	 main(int ac, char **av) {
 	Light		light(vec3(0.0f), vec3(1.0f, 0.5f, 1.0f));
 	int			width;
 	int			height;
+	ISoundEngine* engine = createIrrKlangDevice();
+
+	if (!engine) {
+		std::cout << "Create sound engine error" << std::endl;
+		return 0;
+	}
+	if (!engine->loadPlugins("/home/lunatic/CODE/Scop/IrrKlang/bin/ikpMP3.so")) {
+		std::cout << "MP3 plugin failed" << std::endl;
+	} else {
+		std::cout << "MP3 plugin loaded" << std::endl;
+	}
+	ISound* playback = engine->play2D("/home/lunatic/CODE/Scop/ninur.wav", true, false, true);
 
 	window = init(1920, 1080, "scop");
 	glfwSetKeyCallback(window, key_callback);
@@ -48,13 +64,16 @@ int	 main(int ac, char **av) {
 	light.setShader(shadProg);
 	while(!glfwWindowShouldClose(window)) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		playback->setVolume(static_cast<ik_f32>((sin(timer(1)) + 1.0f) / 2.0f));
+		float pos = playback->getPlayPosition();
+		float val = pos / playback->getPlayLength();
 		glfwGetWindowSize(window, &width, &height);
 		glUniform1f(glGetUniformLocation(shadProg, "time"), (GLfloat)timer(1));
 		glm::mat4 scale(1.0f);
 		scale = glm::translate(scale, glm::vec3(0.0f, -0.8f, -3.0f));
 		scale = glm::scale(scale, glm::vec3(0.10f));
 		glUniformMatrix4fv(glGetUniformLocation(shadProg, "model"), 1, GL_FALSE, glm::value_ptr(scale));
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)width/(float)height, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(val * 45.0f), (float)width/(float)height, 0.1f, 100.0f);
 		glUniformMatrix4fv(glGetUniformLocation(shadProg, "proj"), 1, GL_FALSE, glm::value_ptr(projection));
 		model.Draw(shadProg);
 		glfwSwapBuffers(window);

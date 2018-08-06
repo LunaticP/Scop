@@ -23,6 +23,7 @@ uniform     Light       light;
 
 void main()
 {
-    color = vec4(light.Color, 1.0);
+    color = vec4(1.0, 1.0, 1.0, 1.0);
+//    color = vec4(light.Color, 1.0);
 //	color = texture(catTex,  vertexTex) * vec4(abs(vertexNormal.x), abs(vertexNormal.y), abs(vertexNormal.z), 1.0f);
 }
