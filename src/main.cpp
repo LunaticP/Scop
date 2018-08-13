@@ -92,23 +92,93 @@
 #include <pulse/simple.h>
 #include <pulse/error.h>
 #include <pulse/gccmacro.h>
+#include <iostream>
 
 #define BUFSIZE 1024
+/*
+#define BYTE_8_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_16_PATTERN "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c"
+#define BYTE_32_PATTERN "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY8(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
+#define BYTE_TO_BINARY16(byte)  \
+  (byte & 0x8000 ? '1' : '0'), \
+  (byte & 0x4000 ? '1' : '0'), \
+  (byte & 0x2000 ? '1' : '0'), \
+  (byte & 0x1000 ? '1' : '0'), \
+  (byte & 0x0800 ? '1' : '0'), \
+  (byte & 0x0400 ? '1' : '0'), \
+  (byte & 0x0200 ? '1' : '0'), \
+  (byte & 0x0100 ? '1' : '0'), \
+  (byte & 0x0080 ? '1' : '0'), \
+  (byte & 0x0040 ? '1' : '0'), \
+  (byte & 0x0020 ? '1' : '0'), \
+  (byte & 0x0010 ? '1' : '0'), \
+  (byte & 0x0008 ? '1' : '0'), \
+  (byte & 0x0004 ? '1' : '0'), \
+  (byte & 0x0002 ? '1' : '0'), \
+  (byte & 0x0001 ? '1' : '0')
+#define BYTE_TO_BINARY32(byte)  \
+  (byte & 0x80000000 ? '1' : '0'), \
+  (byte & 0x40000000 ? '1' : '0'), \
+  (byte & 0x20000000 ? '1' : '0'), \
+  (byte & 0x10000000 ? '1' : '0'), \
+  (byte & 0x08000000 ? '1' : '0'), \
+  (byte & 0x04000000 ? '1' : '0'), \
+  (byte & 0x02000000 ? '1' : '0'), \
+  (byte & 0x01000000 ? '1' : '0'), \
+  (byte & 0x00800000 ? '1' : '0'), \
+  (byte & 0x00400000 ? '1' : '0'), \
+  (byte & 0x00200000 ? '1' : '0'), \
+  (byte & 0x00100000 ? '1' : '0'), \
+  (byte & 0x00080000 ? '1' : '0'), \
+  (byte & 0x00040000 ? '1' : '0'), \
+  (byte & 0x00020000 ? '1' : '0'), \
+  (byte & 0x00010000 ? '1' : '0'), \
+  (byte & 0x00008000 ? '1' : '0'), \
+  (byte & 0x00004000 ? '1' : '0'), \
+  (byte & 0x00002000 ? '1' : '0'), \
+  (byte & 0x00001000 ? '1' : '0'), \
+  (byte & 0x00000800 ? '1' : '0'), \
+  (byte & 0x00000400 ? '1' : '0'), \
+  (byte & 0x00000200 ? '1' : '0'), \
+  (byte & 0x00000100 ? '1' : '0'), \
+  (byte & 0x00000080 ? '1' : '0'), \
+  (byte & 0x00000040 ? '1' : '0'), \
+  (byte & 0x00000020 ? '1' : '0'), \
+  (byte & 0x00000010 ? '1' : '0'), \
+  (byte & 0x00000008 ? '1' : '0'), \
+  (byte & 0x00000004 ? '1' : '0'), \
+  (byte & 0x00000002 ? '1' : '0'), \
+  (byte & 0x00000001 ? '1' : '0')
+*/
+pa_sample_spec  parseWaveHeader(uint8_t header[44]) {
+    uint16_t        channels = (header[23] << 8) + header[22];
+    uint16_t        format = (header[35] << 8) + header[34];
+    uint32_t        sampleRate = (header[27] << 24) + (header[26] << 16) + (header[25] << 8) + header[24];
 
-int main(int argc, char*argv[]) {
-
-    /* The Sample format to use */
-    static const pa_sample_spec ss = {
+    pa_sample_spec out = {
             .format = PA_SAMPLE_S16LE,
-            .rate = 44100,
-            .channels = 2
+            .rate = sampleRate,
+            .channels = (uint8_t)channels
     };
+    return out;
+}
 
-    pa_simple *s = NULL;
-    int ret = 1;
-    int error;
+int main(int argc, char **argv) {
+    pa_simple   *s = NULL;
+    uint8_t     waveHeader[44];
+    ssize_t     r;
+    int         ret = 1;
+    int         error;
 
-    /* replace STDIN with the specified file if needed */
     if (argc > 1) {
         int fd;
 
@@ -117,26 +187,21 @@ int main(int argc, char*argv[]) {
             goto finish;
         }
 
-        if (dup2(fd, STDIN_FILENO) < 0) {
-            fprintf(stderr, __FILE__": dup2() failed: %s\n", strerror(errno));
+        if (read(fd, waveHeader, sizeof(waveHeader)) < 0) {
+            fprintf(stderr, __FILE__": read() failed: %s\n", strerror(errno));
             goto finish;
         }
+        std::cout << "header read" << std::endl;
+        static const pa_sample_spec ss = parseWaveHeader(waveHeader);
 
-        close(fd);
-    }
-
-    /* Create a new playback stream */
-    if (!(s = pa_simple_new(NULL, argv[0], PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &error))) {
-        fprintf(stderr, __FILE__": pa_simple_new() failed: %s\n", pa_strerror(error));
-        goto finish;
-    }
-
-    for (;;) {
-        uint8_t buf[BUFSIZE];
-        ssize_t r;
-
+        if (!(s = pa_simple_new(NULL, argv[0], PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &error))) {
+            fprintf(stderr, __FILE__": pa_simple_new() failed: %s\n", pa_strerror(error));
+            goto finish;
+        }
+        for (;;) {
+            uint8_t buf[BUFSIZE];
 #if 0
-        pa_usec_t latency;
+            pa_usec_t latency;
 
         if ((latency = pa_simple_get_latency(s, &error)) == (pa_usec_t) -1) {
             fprintf(stderr, __FILE__": pa_simple_get_latency() failed: %s\n", pa_strerror(error));
@@ -145,30 +210,27 @@ int main(int argc, char*argv[]) {
 
         fprintf(stderr, "%0.0f usec    \r", (float)latency);
 #endif
+            if ((r = read(fd, buf, sizeof(buf))) <= 0) {
+                if (r == 0) /* EOF */
+                    break;
+                fprintf(stderr, __FILE__": read() failed: %s\n", strerror(errno));
+                goto finish;
+            }
+            if (pa_simple_write(s, buf, (size_t) r, &error) < 0) {
+                fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
+                goto finish;
+            }
+        }
 
-        /* Read some data ... */
-        if ((r = read(STDIN_FILENO, buf, sizeof(buf))) <= 0) {
-            if (r == 0) /* EOF */
-                break;
-
-            fprintf(stderr, __FILE__": read() failed: %s\n", strerror(errno));
+        /* Make sure that every single sample was played */
+        if (pa_simple_drain(s, &error) < 0) {
+            fprintf(stderr, __FILE__": pa_simple_drain() failed: %s\n", pa_strerror(error));
             goto finish;
         }
 
-        /* ... and play it */
-        if (pa_simple_write(s, buf, (size_t) r, &error) < 0) {
-            fprintf(stderr, __FILE__": pa_simple_write() failed: %s\n", pa_strerror(error));
-            goto finish;
-        }
+        ret = 0;
+        close(fd);
     }
-
-    /* Make sure that every single sample was played */
-    if (pa_simple_drain(s, &error) < 0) {
-        fprintf(stderr, __FILE__": pa_simple_drain() failed: %s\n", pa_strerror(error));
-        goto finish;
-    }
-
-    ret = 0;
 
     finish:
 
